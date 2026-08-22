@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dayflow — Sign in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+    <div class="auth-shell">
+        <div class="auth-hero">
+            <div>
+                <div class="tagline">HUMAN RESOURCE MANAGEMENT</div>
+                <h1>Every workday,<br />perfectly aligned.</h1>
+            </div>
+
+            <div class="rail-track">
+                <div class="rail-step"><b>Sign in</b>Secure, role-based access for HR and staff.</div>
+                <div class="rail-step"><b>Check in</b>Attendance logged the moment the day starts.</div>
+                <div class="rail-step"><b>Request time off</b>Leave routed straight to the right approver.</div>
+                <div class="rail-step"><b>Get paid</b>Payslips and balances, always in view.</div>
+            </div>
+
+            <div class="foot">Dayflow HRMS &middot; Demo build</div>
+        </div>
+
+        <div class="auth-panel">
+            <div class="auth-card">
+                <div class="tabs">
+                    <button class="tab-btn active" id="tabLogin">Sign in</button>
+                    <button class="tab-btn" id="tabSignup">Sign up</button>
+                </div>
+
+                <div id="loginView">
+                    <h2>Welcome back</h2>
+                    <div class="sub">Sign in to your Dayflow workspace.</div>
+                    <div class="error-banner" id="loginError"></div>
+                    <form id="loginForm">
+                        <div class="field">
+                            <label>Email</label>
+                            <input type="email" id="loginEmail" required placeholder="you@company.com" />
+                        </div>
+                        <div class="field">
+                            <label>Password</label>
+                            <input type="password" id="loginPassword" required placeholder="••••••••" />
+                        </div>
+                        <button class="btn btn-primary" type="submit">Sign in</button>
+                    </form>
+                    <div class="seed-note">Try the demo admin &rarr; admin@dayflow.local / Admin@123</div>
+                </div>
+
+                <div id="signupView" style="display:none;">
+                    <h2>Create your account</h2>
+                    <div class="sub">New employees join with self-service sign up.</div>
+                    <div class="error-banner" id="signupError"></div>
+                    <form id="signupForm">
+                        <div class="field">
+                            <label>Full name</label>
+                            <input type="text" id="suName" required placeholder="Rudra Prasad Rath" />
+                        </div>
+                        <div class="field">
+                            <label>Email</label>
+                            <input type="email" id="suEmail" required placeholder="you@company.com" />
+                        </div>
+                        <div class="field-row">
+                            <div class="field">
+                                <label>Department</label>
+                                <input type="text" id="suDept" placeholder="Engineering" />
+                            </div>
+                            <div class="field">
+                                <label>Designation</label>
+                                <input type="text" id="suDesig" placeholder="Associate" />
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Password</label>
+                            <input type="password" id="suPassword" required placeholder="At least 8 characters" />
+                        </div>
+                        <button class="btn btn-primary" type="submit">Create account</button>
+                    </form>
+                    <div class="hint">New accounts are created with employee access.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        // Already signed in? Route to the right dashboard.
+        if (Dayflow.token() && Dayflow.user()) {
+            location.href = Dayflow.user().role === 'admin' ? '/admin.html' : '/employee.html';
+        }
+
+        const tabLogin = document.getElementById('tabLogin');
+        const tabSignup = document.getElementById('tabSignup');
+        const loginView = document.getElementById('loginView');
+        const signupView = document.getElementById('signupView');
+
+        tabLogin.onclick = () => {
+            tabLogin.classList.add('active'); tabSignup.classList.remove('active');
+            loginView.style.display = ''; signupView.style.display = 'none';
+        };
+        tabSignup.onclick = () => {
+            tabSignup.classList.add('active'); tabLogin.classList.remove('active');
+            signupView.style.display = ''; loginView.style.display = 'none';
+        };
+
+        function showError(id, msg) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.classList.add('show');
+        }
+        function hideError(id) { document.getElementById(id).classList.remove('show'); }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError('loginError');
+            try {
+                const data = await Dayflow.post('/auth/login', {
+                    email: document.getElementById('loginEmail').value.trim(),
+                    password: document.getElementById('loginPassword').value,
+                });
+                Dayflow.setToken(data.token);
+                Dayflow.setUser(data.user);
+                location.href = data.user.role === 'admin' ? '/admin.html' : '/employee.html';
+            } catch (err) {
+                showError('loginError', err.message);
+            }
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError('signupError');
+            try {
+                const data = await Dayflow.post('/auth/signup', {
+                    name: document.getElementById('suName').value.trim(),
+                    email: document.getElementById('suEmail').value.trim(),
+                    department: document.getElementById('suDept').value.trim(),
+                    designation: document.getElementById('suDesig').value.trim(),
+                    password: document.getElementById('suPassword').value,
+                });
+                Dayflow.setToken(data.token);
+                Dayflow.setUser(data.user);
+                location.href = '/employee.html';
+            } catch (err) {
+                showError('signupError', err.message);
+            }
+        });
+    </script>
+</body>
+
+</html>
