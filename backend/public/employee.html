@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dayflow — Employee</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">Day<span>flow</span></div>
+            <div class="nav-group">
+                <div class="nav-item active" data-view="home"><span class="nav-dot"></span>Home</div>
+                <div class="nav-item" data-view="attendance"><span class="nav-dot"></span>Attendance</div>
+                <div class="nav-item" data-view="leave"><span class="nav-dot"></span>Leave &amp; time off</div>
+                <div class="nav-item" data-view="payroll"><span class="nav-dot"></span>Payslips</div>
+                <div class="nav-item" data-view="profile"><span class="nav-dot"></span>My profile</div>
+            </div>
+            <div class="sidebar-foot">
+                <div class="who" id="whoName">—</div>
+                <div class="who-role" id="whoRole">Employee</div>
+                <div class="logout-link" id="logoutBtn">Sign out</div>
+            </div>
+        </aside>
+
+        <main class="main">
+
+            <!-- HOME -->
+            <section id="view-home">
+                <div class="main-header">
+                    <div>
+                        <div class="eyebrow" id="todayDate">—</div>
+                        <h1>Good to see you.</h1>
+                    </div>
+                    <div id="checkActions"></div>
+                </div>
+
+                <div class="rail-mini" id="dayRail">
+                    <div class="rp" data-step="checkin">Check-in</div>
+                    <div class="rp" data-step="work">At work</div>
+                    <div class="rp" data-step="checkout">Check-out</div>
+                    <div class="rp" data-step="done">Day closed</div>
+                </div>
+
+                <div class="grid grid-4" id="homeStats"></div>
+
+                <div class="section-title">Recent leave requests</div>
+                <div class="card">
+                    <div class="table-wrap">
+                        <table id="homeLeaveTable">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Dates</th>
+                                    <th>Days</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ATTENDANCE -->
+            <section id="view-attendance" style="display:none;">
+                <div class="main-header">
+                    <div>
+                        <div class="eyebrow">Attendance</div>
+                        <h1>Your attendance log</h1>
+                    </div>
+                </div>
+                <div class="pill-row">
+                    <button class="pill active" data-range="30">Last 30 days</button>
+                    <button class="pill" data-range="90">Last 90 days</button>
+                    <button class="pill" data-range="all">All time</button>
+                </div>
+                <div class="card">
+                    <div class="table-wrap">
+                        <table id="attendanceTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Check-in</th>
+                                    <th>Check-out</th>
+                                    <th>Status</th>
+                                    <th>Note</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEAVE -->
+            <section id="view-leave" style="display:none;">
+                <div class="main-header">
+                    <div>
+                        <div class="eyebrow">Leave &amp; time off</div>
+                        <h1>Manage your time off</h1>
+                    </div>
+                    <button class="btn btn-primary btn-small" id="openLeaveModal">Apply for leave</button>
+                </div>
+
+                <div class="grid grid-4" id="balanceCards"></div>
+
+                <div class="section-title">Your requests</div>
+                <div class="card">
+                    <div class="table-wrap">
+                        <table id="leaveTable">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Days</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAYROLL -->
+            <section id="view-payroll" style="display:none;">
+                <div class="main-header">
+                    <div>
+                        <div class="eyebrow">Payroll</div>
+                        <h1>Payslips</h1>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="table-wrap">
+                        <table id="payrollTable">
+                            <thead>
+                                <tr>
+                                    <th>Period</th>
+                                    <th>Basic</th>
+                                    <th>Allowances</th>
+                                    <th>Deductions</th>
+                                    <th>Net pay</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROFILE -->
+            <section id="view-profile" style="display:none;">
+                <div class="main-header">
+                    <div>
+                        <div class="eyebrow">Profile</div>
+                        <h1>My details</h1>
+                    </div>
+                </div>
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>Employment</h3>
+                        <div id="profileReadonly"></div>
+                    </div>
+                    <div class="card">
+                        <h3>Contact details</h3>
+                        <form id="profileForm">
+                            <div class="field"><label>Phone</label><input type="text" id="pfPhone" /></div>
+                            <div class="field"><label>Address</label><textarea id="pfAddress" rows="2"></textarea></div>
+                            <div class="field"><label>Emergency contact</label><input type="text" id="pfEmergency" />
+                            </div>
+                            <button class="btn btn-primary" type="submit">Save changes</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Apply leave modal -->
+    <div class="modal-backdrop" id="leaveModalBackdrop">
+        <div class="modal">
+            <h3>Apply for leave</h3>
+            <form id="leaveForm">
+                <div class="field">
+                    <label>Leave type</label>
+                    <select id="leaveType" required>
+                        <option value="Paid">Paid</option>
+                        <option value="Sick">Sick</option>
+                        <option value="Unpaid">Unpaid</option>
+                    </select>
+                </div>
+                <div class="field-row">
+                    <div class="field"><label>Start date</label><input type="date" id="leaveStart" required /></div>
+                    <div class="field"><label>End date</label><input type="date" id="leaveEnd" required /></div>
+                </div>
+                <div class="field"><label>Reason</label><textarea id="leaveReason" rows="3"
+                        placeholder="Optional"></textarea></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-ghost" id="cancelLeaveModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/employee.js"></script>
+</body>
+
+</html>
