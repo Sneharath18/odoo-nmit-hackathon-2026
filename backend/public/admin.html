@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dayflow — Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">Day<span>flow</span></div>
+            <div class="nav-group">
+                <div class="nav-item active" data-view="home"><span class="nav-dot"></span>Overview</div>
+                <div class="nav-item" data-view="employees"><span class="nav-dot"></span>Employees</div>
+                <div class="nav-item" data-view="attendance"><span class="nav-dot"></span>Attendance</div>
+                <div class="nav-item" data-view="approvals"><span class="nav-dot"></span>Leave approvals</div>
+                <div class="nav-item" data-view="payroll"><span class="nav-dot"></span>Payroll</div>
+            </div>
+            <div class="sidebar-foot">
+                <div class="who" id="whoName">—</div>
+                <div class="who-role">HR Admin</div>
+                <div class="logout-link" id="logoutBtn">Sign out</div>
+            </div>
+        </aside>
+
+        <main class="main">
+
+            <!-- OVERVIEW -->
+            <section id="view-home">
+                <div class="main-header">
+                    <div>
+                        <div class="eyebrow" id="todayDate">—</div>
+                        <h1>Team overview</h1>
+                    </div>
+                </div>
+                <div class="grid grid-4" id="adminStats"></div>
+
+                <div class="section-title">Pending leave requests</div>
+                <div class="card">
+                    <div class="table-wrap">
+                        <table id="homeApprovalsTable">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Type</th>
+                                    <th>Dates</th>
+                                    <th>Days</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EMPLOYEES -->
+            <section id="view-employees" style="display:none;">
+                <div class="main-header">
+                    <div>
+                        <div class="eyebrow">Directory</div>
+                        <h1>Employees</h1>
+                    </div>
+                    <button class="btn btn-primary btn-small" id="openAddEmployee">Add employee</button>
+                </div>
+                <div class="field" style="max-width:320px;">
+                    <input type="text" id="empSearch" placeholder="Search by name, code or email" />
+                </div>
+                <div class="card">
+                    <div class="table-wrap">
+                        <table id="employeesTable">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Designation</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ATTENDANCE -->
+            <section id="view-attendance" style="display:none;">
+                <div class="main-header">
+                    <div>
+                        <div class="eyebrow">Attendance</div>
+                        <h1>Team attendance</h1>
+                    </div>
+                </div>
+                <div class="field" style="max-width:220px;">
+                    <label>Date</label>
+                    <input type="date" id="attDate" />
+                </div>
+                <div class="card">
+                    <div class="table-wrap">
+                        <table id="adminAttendanceTable">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Department</th>
+                                    <th>Check-in</th>
+                                    <th>Check-out</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- APPROVALS -->
+            <section id="view-approvals" style="display:none;">
+                <div class="main-header">
+                    <div>
+                        <div class="eyebrow">Workflow</div>
+                        <h1>Leave approvals</h1>
+                    </div>
+                </div>
+                <div class="pill-row">
+                    <button class="pill active" data-status="Pending">Pending</button>
+                    <button class="pill" data-status="Approved">Approved</button>
+                    <button class="pill" data-status="Rejected">Rejected</button>
+                    <button class="pill" data-status="">All</button>
+                </div>
+                <div class="card">
+                    <div class="table-wrap">
+                        <table id="approvalsTable">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Type</th>
+                                    <th>Dates</th>
+                                    <th>Days</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAYROLL -->
+            <section id="view-payroll" style="display:none;">
+                <div class="main-header">
+                    <div>
+                        <div class="eyebrow">Payroll</div>
+                        <h1>Generate payslip</h1>
+                    </div>
+                </div>
+                <div class="card" style="max-width:520px;">
+                    <form id="payrollForm">
+                        <div class="field">
+                            <label>Employee</label>
+                            <select id="prEmployee" required></select>
+                        </div>
+                        <div class="field-row">
+                            <div class="field"><label>Month</label>
+                                <select id="prMonth">
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                            <div class="field"><label>Year</label><input type="number" id="prYear" value="2026" /></div>
+                        </div>
+                        <div class="field-row">
+                            <div class="field"><label>Basic (₹)</label><input type="number" id="prBasic" value="0" />
+                            </div>
+                            <div class="field"><label>Allowances (₹)</label><input type="number" id="prAllowances"
+                                    value="0" /></div>
+                        </div>
+                        <div class="field"><label>Deductions (₹)</label><input type="number" id="prDeductions"
+                                value="0" /></div>
+                        <button class="btn btn-primary" type="submit">Generate payslip</button>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Add employee modal -->
+    <div class="modal-backdrop" id="addEmpBackdrop">
+        <div class="modal">
+            <h3>Add employee</h3>
+            <form id="addEmpForm">
+                <div class="field"><label>Full name</label><input type="text" id="aeName" required /></div>
+                <div class="field"><label>Email</label><input type="email" id="aeEmail" required /></div>
+                <div class="field-row">
+                    <div class="field"><label>Department</label><input type="text" id="aeDept" /></div>
+                    <div class="field"><label>Designation</label><input type="text" id="aeDesig" /></div>
+                </div>
+                <div class="field"><label>Temporary password</label><input type="text" id="aePassword" required
+                        placeholder="At least 8 characters" /></div>
+                <div class="field">
+                    <label>Role</label>
+                    <select id="aeRole">
+                        <option value="employee">Employee</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-ghost" id="cancelAddEmp">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit employee modal -->
+    <div class="modal-backdrop" id="editEmpBackdrop">
+        <div class="modal">
+            <h3>Edit employee</h3>
+            <form id="editEmpForm">
+                <input type="hidden" id="eeId" />
+                <div class="field"><label>Full name</label><input type="text" id="eeName" required /></div>
+                <div class="field-row">
+                    <div class="field"><label>Department</label><input type="text" id="eeDept" /></div>
+                    <div class="field"><label>Designation</label><input type="text" id="eeDesig" /></div>
+                </div>
+                <div class="field">
+                    <label>Status</label>
+                    <select id="eeStatus">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-ghost" id="cancelEditEmp">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Decide leave modal -->
+    <div class="modal-backdrop" id="decideBackdrop">
+        <div class="modal">
+            <h3 id="decideTitle">Decide leave request</h3>
+            <form id="decideForm">
+                <input type="hidden" id="dLeaveId" />
+                <input type="hidden" id="dDecision" />
+                <div class="field"><label>Comment (optional)</label><textarea id="dComment" rows="3"></textarea></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-ghost" id="cancelDecide">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="confirmDecide">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Correct attendance modal -->
+    <div class="modal-backdrop" id="correctBackdrop">
+        <div class="modal">
+            <h3>Correct attendance</h3>
+            <form id="correctForm">
+                <input type="hidden" id="caId" />
+                <div class="field">
+                    <label>Status</label>
+                    <select id="caStatus">
+                        <option>Present</option>
+                        <option>Absent</option>
+                        <option>Half-Day</option>
+                        <option>Late</option>
+                        <option>On Leave</option>
+                    </select>
+                </div>
+                <div class="field-row">
+                    <div class="field"><label>Check-in</label><input type="time" id="caCheckIn" /></div>
+                    <div class="field"><label>Check-out</label><input type="time" id="caCheckOut" /></div>
+                </div>
+                <div class="field"><label>Reason for correction</label><textarea id="caNote" rows="2"
+                        required></textarea></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-ghost" id="cancelCorrect">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save correction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/admin.js"></script>
+</body>
+
+</html>
